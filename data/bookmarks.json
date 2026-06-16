@@ -1,0 +1,15 @@
+{
+  "bookmarks": [
+    { "key": "0", "label": "Overview"                                                                    },
+    { "key": "1", "label": "Input Data band",         "target": "band_01",            "k": 0.34 },
+    { "key": "2", "label": "Policy Corpus detail",    "target": "policy_corpus",      "k": 2.4  },
+    { "key": "3", "label": "Semantic AI band",        "target": "band_02",            "k": 0.34 },
+    { "key": "4", "label": "ClimateBERT detail",      "target": "climatebert",        "k": 2.4  },
+    { "key": "5", "label": "Impact Model band",       "target": "band_03",            "k": 0.34 },
+    { "key": "6", "label": "Aggravation detail",      "target": "aggravation",        "k": 2.4  },
+    { "key": "7", "label": "Spatial Reflection band", "target": "band_04",            "k": 0.34 },
+    { "key": "8", "label": "El Raval worked example", "target": "neighborhood_example","k": 2.4  },
+    { "key": "9", "label": "Simulation & Output band","target": "band_05",            "k": 0.34 }
+  ]
+}
+

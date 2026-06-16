@@ -1,0 +1,393 @@
+{
+  "title": "BRIDGING POLICY AND CLIMATE DATA",
+  "subtitle": "Semantic AI · Digital Twin · Barcelona Metropolitan Area",
+  "bands": [
+    {
+      "id": "01",
+      "title": "INPUT DATA",
+      "subtitle": "corpora · imagery · geospatial",
+      "modules": [
+        {
+          "id": "policy_corpus",
+          "title": "Policy Corpus",
+          "summary": "Municipal plans · proposals · sentences",
+          "details": [
+            "30,000 sample sentences",
+            "Barcelona metropolitan area",
+            "Multi-year planning documents",
+            "Neighborhood-tagged: El Raval, Gràcia, Poblenou, les Corts, el Gòtic, Horta"
+          ]
+        },
+        {
+          "id": "street_views",
+          "title": "Street Views",
+          "summary": "Facade imagery for color/heat analysis",
+          "details": [
+            "5,000 images segmented and processed",
+            "White-balance normalised",
+            "Facade segmentation by priority",
+            "ML pixel clustering → majority color value",
+            "Major color → heat score"
+          ]
+        },
+        {
+          "id": "landsat",
+          "title": "LANDSAT LST",
+          "summary": "Land Surface Temperature · 30m res",
+          "details": [
+            "Time series 2020–2024",
+            "30 m spatial resolution",
+            "Driver of urban heat island analysis",
+            "Baseline for policy impact comparison"
+          ]
+        },
+        {
+          "id": "spei",
+          "title": "SPEI",
+          "summary": "Standardised Precipitation-Evapotranspiration Index",
+          "details": [
+            "Drought index time series",
+            "Water demand correlation",
+            "Urban morphology dependent",
+            "LST coupling for compound risk"
+          ]
+        },
+        {
+          "id": "raster_inputs",
+          "title": "Raster Inputs",
+          "summary": "DSM · DEM · NDVI · NDBI · Albedo",
+          "details": [
+            "DSM 2m resolution",
+            "DEM 2m resolution",
+            "NDVI (vegetation index)",
+            "NDBI (built-up / impervious)",
+            "Albedo (surface reflectance)"
+          ]
+        },
+        {
+          "id": "socio_demo",
+          "title": "Socio-Demographic",
+          "summary": "Vulnerable population layer",
+          "details": [
+            "Population & demand 29.0%",
+            "Demographic vulnerability mapping",
+            "Driving factor for human-centred model",
+            "Per-neighborhood aggregation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "title": "SEMANTIC AI",
+      "subtitle": "transformer · embeddings · parsing",
+      "modules": [
+        {
+          "id": "climatebert",
+          "title": "ClimateBERT",
+          "summary": "Transformer NLP · 768-dim embeddings",
+          "details": [
+            "Transformer architecture (NLP)",
+            "768-dimension embeddings",
+            "Fine-tuned for climate-policy language",
+            "Outputs semantic vector per sentence"
+          ]
+        },
+        {
+          "id": "negation",
+          "title": "Negation Tagging",
+          "summary": "Function + semantic negators",
+          "details": [
+            "FUNCTION_NEGATORS = {not, no, n't, never, neither, nor, without}",
+            "SEMANTIC_NEGATORS = {absence, lack, removal, loss}",
+            "Inverts direction of intervention",
+            "Critical for policy intent disambiguation"
+          ]
+        },
+        {
+          "id": "verb_object",
+          "title": "Verb / Object Parsing",
+          "summary": "Action verbs + target objects",
+          "details": [
+            "Verbs: increase, add, expand, install",
+            "Verbs: reduce, remove, cut, decrease, eliminate, clear, limit",
+            "Object extraction: trees, views, visitors, bus fleet",
+            "Example: 'Cutting trees to increase viewpoints' → verb=cut, obj=trees"
+          ]
+        },
+        {
+          "id": "neighborhood",
+          "title": "Neighborhood Detection",
+          "summary": "Geo-entity tagging on sentences",
+          "details": [
+            "Detects Barcelona neighborhood mentions",
+            "Examples: Gràcia, El Raval, Poblenou, les Corts, el Gòtic",
+            "Routes impact vector to spatial unit",
+            "Enables district-level aggregation"
+          ]
+        },
+        {
+          "id": "impact_vector",
+          "title": "Impact Vector",
+          "summary": "Direction + 3-dim impact array",
+          "details": [
+            "direction ∈ {0 mitigation, 1 harm}",
+            "impact = [heat, drought, health]",
+            "Example: direction=1, impact=[-0.45, -0.02, -0.76]",
+            "Per-sentence structured output → JSON"
+          ]
+        },
+        {
+          "id": "json_schema",
+          "title": "JSON Output",
+          "summary": "Structured per-sentence record",
+          "details": [
+            "{ sentence, neighborhood, year, direction, impact, intervention_type }",
+            "intervention_type ∈ {0,1,2,...}",
+            "30,000 records",
+            "Feeds the impact model & raster reflection"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "title": "IMPACT MODEL",
+      "subtitle": "DNN · SHAP · drivers",
+      "modules": [
+        {
+          "id": "dnn",
+          "title": "Deep Neural Network",
+          "summary": "Spatial-data values trained in network",
+          "details": [
+            "PyTorch dataset from spatial layers",
+            "Trains on SHAP-weighted parameters",
+            "Coupled with semantic embeddings (768-d)",
+            "Inference produces impact estimate"
+          ]
+        },
+        {
+          "id": "shap_lst",
+          "title": "SHAP · LST",
+          "summary": "Driver decomposition for heat",
+          "details": [
+            "Vegetation",
+            "Impervious",
+            "Facade Heat Score",
+            "Sky View",
+            "Albedo",
+            "Urban Morphology"
+          ]
+        },
+        {
+          "id": "shap_spei",
+          "title": "SHAP · SPEI",
+          "summary": "Driver decomposition for drought",
+          "details": [
+            "LST coupling",
+            "Water demand",
+            "Urban morphology",
+            "Partial dependency analysis"
+          ]
+        },
+        {
+          "id": "city_drivers",
+          "title": "City-wide Drivers",
+          "summary": "Aggregate driver weights",
+          "details": [
+            "Population & demand 29.0%",
+            "Base climate state 18.5%",
+            "Imperviousness 17.3%",
+            "Façades & albedo 13.3%",
+            "Urban morphology 12.5%",
+            "Trees / NDVI 9.3%"
+          ]
+        },
+        {
+          "id": "local_drivers",
+          "title": "Local Drivers",
+          "summary": "Neighborhood-scale driver weights",
+          "details": [
+            "Base climate state 31.9%",
+            "Façades & albedo 24.3%",
+            "Population & demand 20.2%",
+            "Urban morphology 10.2%",
+            "Imperviousness 8.4%",
+            "Trees / NDVI 5.2%"
+          ]
+        },
+        {
+          "id": "aggravation",
+          "title": "Aggravation Output",
+          "summary": "Risk channel breakdown",
+          "details": [
+            "Drought risk 91.7% (local) · 92.0% (city)",
+            "Heat risk 6.7% (local) · 6.3% (city)",
+            "Urban health 1.6% (local) · 1.7% (city)",
+            "Confidence 95.8% local · 92.6% city"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "title": "SPATIAL REFLECTION",
+      "subtitle": "raster redraw · per-neighborhood",
+      "modules": [
+        {
+          "id": "lst_redraw",
+          "title": "LST Raster Redraw",
+          "summary": "Heat map under policy scenario",
+          "details": [
+            "Baseline LST from LANDSAT",
+            "Modulated by semantic impact vector",
+            "Per-neighborhood weight application",
+            "Time-series projection 2020–2024+"
+          ]
+        },
+        {
+          "id": "spei_redraw",
+          "title": "SPEI Raster Redraw",
+          "summary": "Drought map under policy scenario",
+          "details": [
+            "Baseline SPEI grid",
+            "Adjusted by drought-channel impact",
+            "Reflects water-demand and morphology shifts",
+            "Coupled with LST output"
+          ]
+        },
+        {
+          "id": "neighborhood_example",
+          "title": "Worked Example",
+          "summary": "El Raval · 'Installing green roofs'",
+          "details": [
+            "Policy: 'Installing green roofs in El Raval'",
+            "Direction: mitigation (−1)",
+            "Confidence: 90%",
+            "Impact: 65% heat · 20% drought · 15% health",
+            "Neighborhood baseline: Heat 0.8 · Drought 0.5 · Vulnerability 0.7"
+          ]
+        },
+        {
+          "id": "weight_map",
+          "title": "Weight → Map",
+          "summary": "How weights become pixels",
+          "details": [
+            "Per-pixel modulation of raster",
+            "Spatial smoothing within neighborhood",
+            "Confidence as alpha channel",
+            "Output: redrawn GeoTIFF / PNG"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "title": "SIMULATION & OUTPUT",
+      "subtitle": "ABM · UTCI · benchmark",
+      "modules": [
+        {
+          "id": "abm",
+          "title": "Agent-Based Model",
+          "summary": "Pedestrian agents in policy-modulated env",
+          "details": [
+            "Agent learns urban features (road, pedestrian zones)",
+            "Agent reads climate field over built env",
+            "Pedestrian interaction shifts with policy/design",
+            "Human-centric impact simulation"
+          ]
+        },
+        {
+          "id": "utci",
+          "title": "UTCI",
+          "summary": "Universal Thermal Climate Index",
+          "details": [
+            "Semantic output → micro-climate visual",
+            "Per-pixel thermal comfort",
+            "Validates raster redraw at human scale",
+            "Outputs: UTCI · Shadows · TMRT"
+          ]
+        },
+        {
+          "id": "solweig",
+          "title": "SOLWEIG-GPU",
+          "summary": "Raster UTCI · Gothenburg open source",
+          "details": [
+            "Open-source (Gothenburg researchers)",
+            "Raster-based UTCI simulator",
+            "Requires high-end GPU + processing time",
+            "Input: DSM · DEM · NDVI · NDBI · Albedo"
+          ]
+        },
+        {
+          "id": "envimet",
+          "title": "ENVI-MET",
+          "summary": "Model-based UTCI simulator",
+          "details": [
+            "Established micro-climate model",
+            "Trial license limitation noted",
+            "Output size truncated at trial end",
+            "Comparator for SOLWEIG-GPU runs"
+          ]
+        },
+        {
+          "id": "ladybug",
+          "title": "Ladybug Comfort SDK",
+          "summary": "Comfort modeling toolkit",
+          "details": [
+            "Comfort SDK integration",
+            "Parametric environment in CAD",
+            "Cross-check with raster outputs",
+            "Designer-facing pathway"
+          ]
+        },
+        {
+          "id": "ipcc",
+          "title": "IPCC Benchmark",
+          "summary": "Risk-assessment grounding",
+          "details": [
+            "Benchmarked against WGII AR5",
+            "Risk assessment of impacts, adaptation, vulnerability",
+            "Frames the tool as analytical, not predictive",
+            "Climate-system interference acknowledged"
+          ]
+        }
+      ]
+    }
+  ],
+  "flows": [
+    { "from": "policy_corpus", "to": "climatebert" },
+    { "from": "policy_corpus", "to": "negation" },
+    { "from": "policy_corpus", "to": "verb_object" },
+    { "from": "street_views", "to": "shap_lst" },
+    { "from": "landsat", "to": "shap_lst" },
+    { "from": "spei", "to": "shap_spei" },
+    { "from": "raster_inputs", "to": "dnn" },
+    { "from": "socio_demo", "to": "city_drivers" },
+    { "from": "climatebert", "to": "impact_vector" },
+    { "from": "negation", "to": "impact_vector" },
+    { "from": "verb_object", "to": "impact_vector" },
+    { "from": "neighborhood", "to": "impact_vector" },
+    { "from": "impact_vector", "to": "json_schema" },
+    { "from": "json_schema", "to": "dnn" },
+    { "from": "dnn", "to": "aggravation" },
+    { "from": "shap_lst", "to": "city_drivers" },
+    { "from": "shap_spei", "to": "city_drivers" },
+    { "from": "shap_lst", "to": "local_drivers" },
+    { "from": "shap_spei", "to": "local_drivers" },
+    { "from": "city_drivers", "to": "aggravation" },
+    { "from": "local_drivers", "to": "aggravation" },
+    { "from": "aggravation", "to": "lst_redraw" },
+    { "from": "aggravation", "to": "spei_redraw" },
+    { "from": "lst_redraw", "to": "neighborhood_example" },
+    { "from": "spei_redraw", "to": "neighborhood_example" },
+    { "from": "neighborhood_example", "to": "weight_map" },
+    { "from": "weight_map", "to": "abm" },
+    { "from": "weight_map", "to": "utci" },
+    { "from": "utci", "to": "solweig" },
+    { "from": "utci", "to": "envimet" },
+    { "from": "utci", "to": "ladybug" },
+    { "from": "abm", "to": "ipcc" },
+    { "from": "utci", "to": "ipcc" }
+  ]
+}
