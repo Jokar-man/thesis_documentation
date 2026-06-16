@@ -1,0 +1,249 @@
+/* ============================================================
+   THESIS ATLAS · stylesheet
+   Pure-black ground, hairline-white ink, archival typography.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Serif:wght@300;400;500&display=swap');
+
+:root {
+  --bg: #000000;
+  --ink: #ffffff;
+  --ink-dim: rgba(255, 255, 255, 0.55);
+  --ink-faint: rgba(255, 255, 255, 0.22);
+  --ink-ghost: rgba(255, 255, 255, 0.08);
+  --hair: 0.5px;
+  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --serif: 'IBM Plex Serif', Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  width: 100%; height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-weight: 300;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: crosshair;
+}
+
+#atlas {
+  width: 100vw;
+  height: 100vh;
+  display: block;
+}
+
+/* ---- Header (top-left, persistent) ---- */
+.header {
+  position: fixed;
+  top: 18px; left: 22px;
+  z-index: 10;
+  pointer-events: none;
+  user-select: none;
+  background: rgba(0,0,0,0.78);
+  padding: 6px 12px 6px 0;
+}
+.header .title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.header .subtitle {
+  margin-top: 4px;
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+}
+
+/* ---- Bottom-left HUD: current bookmark / coords ---- */
+.hud {
+  position: fixed;
+  bottom: 16px; left: 22px;
+  z-index: 10;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1.6;
+  background: rgba(0,0,0,0.78);
+  padding: 4px 12px 4px 0;
+}
+.hud .row span:first-child { color: var(--ink-faint); margin-right: 8px; }
+.hud .row .value { color: var(--ink); }
+
+/* ---- Bottom-right: zoom indicator ---- */
+.zoom-meter {
+  position: fixed;
+  bottom: 16px; right: 22px;
+  z-index: 10;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+}
+.zoom-meter .k { color: var(--ink); }
+
+/* ---- Top-right: key legend (collapsed by default, toggleable) ---- */
+.legend {
+  position: fixed;
+  top: 18px; right: 22px;
+  z-index: 10;
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  text-align: right;
+  user-select: none;
+  pointer-events: auto;
+}
+.legend .toggle {
+  cursor: pointer;
+  border: var(--hair) solid var(--ink-faint);
+  padding: 4px 8px;
+  display: inline-block;
+}
+.legend .toggle:hover { color: var(--ink); border-color: var(--ink); }
+.legend .panel {
+  display: none;
+  margin-top: 8px;
+  border: var(--hair) solid var(--ink-faint);
+  padding: 10px 12px;
+  background: rgba(0,0,0,0.7);
+  line-height: 1.9;
+  text-align: left;
+  min-width: 220px;
+}
+.legend.open .panel { display: block; }
+.legend .panel .k {
+  display: inline-block;
+  width: 18px;
+  color: var(--ink);
+  border: var(--hair) solid var(--ink-faint);
+  text-align: center;
+  margin-right: 8px;
+  padding: 1px 0;
+}
+
+/* ---- SVG content layers ---- */
+svg text { fill: var(--ink); font-family: var(--mono); font-weight: 300; }
+svg .band-frame, svg .module-frame, svg .module-detail-bg, svg .corner-tick, svg .band-tick, svg .flow-line {
+  vector-effect: non-scaling-stroke;
+}
+
+.band-frame {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 0.6;
+}
+.band-tick {
+  stroke: var(--ink-faint);
+  stroke-width: 0.4;
+}
+.band-id {
+  font-family: var(--serif);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  fill: var(--ink-dim);
+}
+.band-title {
+  font-family: var(--serif);
+  font-size: 16px;
+  letter-spacing: 0.32em;
+  fill: var(--ink);
+  text-transform: uppercase;
+}
+.band-subtitle {
+  font-size: 8.5px;
+  letter-spacing: 0.22em;
+  fill: var(--ink-dim);
+  text-transform: uppercase;
+}
+
+.module-frame {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 0.4;
+}
+.module-title {
+  font-family: var(--serif);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  fill: var(--ink);
+  text-transform: uppercase;
+}
+.module-summary {
+  font-size: 6.8px;
+  letter-spacing: 0.08em;
+  fill: var(--ink-dim);
+}
+.module-id {
+  font-size: 5.5px;
+  letter-spacing: 0.2em;
+  fill: var(--ink-faint);
+}
+
+.module-detail-bg {
+  fill: var(--bg);
+  stroke: var(--ink);
+  stroke-width: 0.6;
+  pointer-events: none;
+}
+.module-detail-line {
+  fill: var(--ink);
+  pointer-events: none;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+.module-detail-bullet {
+  fill: var(--ink);
+  pointer-events: none;
+}
+
+.flow-line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 0.25;
+  opacity: 0.32;
+}
+
+.bg-grid line {
+  stroke: var(--ink-ghost);
+  stroke-width: 0.25;
+}
+
+/* node hover state */
+.module-group { cursor: pointer; }
+.module-group:hover .module-frame { stroke-width: 0.8; }
+.module-group:hover .module-title { fill: var(--ink); }
+
+/* corner tick marks */
+.corner-tick { stroke: var(--ink); stroke-width: 0.5; fill: none; }
+
+/* loading state */
+.loading {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg);
+  color: var(--ink-dim);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  z-index: 100;
+}
+.loading.hidden { display: none; }
+
+/* recording mode hides all chrome */
+body.recording .header,
+body.recording .hud,
+body.recording .zoom-meter,
+body.recording .legend { display: none; }
