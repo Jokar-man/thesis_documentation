@@ -24,6 +24,9 @@ const atlasEl  = document.getElementById('atlas');
 const worldEl  = document.getElementById('world');
 const atlasSel = d3.select(atlasEl);
 
+// Computed after SVG loads — tight bounds excluding the background fill rect
+let overviewBounds = { x: 0, y: 0, w: SVG_W, h: SVG_H };
+
 // ---- D3 zoom ----
 const zoom = d3.zoom()
   .scaleExtent([0.04, 40])
@@ -43,6 +46,19 @@ d3.xml(encodeURI('data visualization-01.svg'))
 
     document.querySelector('.loading').classList.add('hidden');
     buildLegend();
+
+    // Compute tight content bounds by temporarily hiding the black background
+    // rect (Layer_1) so getBBox only captures actual drawn content.
+    const layer1 = worldEl.querySelector('#Layer_1');
+    if (layer1) layer1.style.display = 'none';
+    try {
+      const bb = worldEl.getBBox();
+      if (bb.width > 0 && bb.height > 0) {
+        overviewBounds = { x: bb.x, y: bb.y, w: bb.width, h: bb.height };
+      }
+    } catch (e) { /* fallback stays as full SVG dims */ }
+    if (layer1) layer1.style.display = '';
+
     // initial view: fit the full diagram
     setTimeout(() => goBookmark(BOOKMARKS[0], false), 60);
   })
@@ -69,7 +85,8 @@ function goBookmark(bm, animate = true) {
   if (bm.x != null) {
     fitRect(bm.x, bm.y, bm.w, bm.h, animate);
   } else {
-    fitRect(0, 0, SVG_W, SVG_H, animate, 1.0);
+    const o = overviewBounds;
+    fitRect(o.x, o.y, o.w, o.h, animate, 1.0);
   }
 }
 
