@@ -23,14 +23,12 @@ const BOOKMARKS = [
 const atlasEl  = document.getElementById('atlas');
 const worldEl  = document.getElementById('world');
 const atlasSel = d3.select(atlasEl);
-let currentBookmark = '0 · Overview';
 
 // ---- D3 zoom ----
 const zoom = d3.zoom()
   .scaleExtent([0.04, 40])
   .on('zoom', event => {
     worldEl.setAttribute('transform', event.transform);
-    updateHUD(event.transform);
   });
 
 atlasSel.call(zoom);
@@ -54,10 +52,10 @@ d3.xml(encodeURI('data visualization-01.svg'))
   });
 
 // ---- camera ----
-function fitRect(rx, ry, rw, rh, animate) {
+function fitRect(rx, ry, rw, rh, animate, padding = 0.92) {
   const vw = atlasEl.clientWidth;
   const vh = atlasEl.clientHeight;
-  const k  = Math.min(vw / rw, vh / rh) * 0.92;
+  const k  = Math.min(vw / rw, vh / rh) * padding;
   const tx = vw / 2 - (rx + rw / 2) * k;
   const ty = vh / 2 - (ry + rh / 2) * k;
   const t  = d3.zoomIdentity.translate(tx, ty).scale(k);
@@ -68,20 +66,11 @@ function fitRect(rx, ry, rw, rh, animate) {
 }
 
 function goBookmark(bm, animate = true) {
-  currentBookmark = `${bm.key} · ${bm.label}`;
-  document.querySelector('.hud .bookmark').textContent = currentBookmark;
   if (bm.x != null) {
     fitRect(bm.x, bm.y, bm.w, bm.h, animate);
   } else {
-    fitRect(0, 0, SVG_W, SVG_H, animate);
+    fitRect(0, 0, SVG_W, SVG_H, animate, 1.0);
   }
-}
-
-// ---- HUD ----
-function updateHUD(t) {
-  document.querySelector('.zoom-meter .k').textContent = `×${t.k.toFixed(2)}`;
-  document.querySelector('.hud .coord').textContent =
-    `${Math.round(-t.x)} , ${Math.round(-t.y)}`;
 }
 
 // ---- keyboard ----
