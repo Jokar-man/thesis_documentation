@@ -6,14 +6,13 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Serif:wght@300;400;500&display=swap');
 
 :root {
-  --bg: #000000;
-  --ink: #ffffff;
-  --ink-dim: rgba(255, 255, 255, 0.55);
+  --bg:        #000000;
+  --ink:       #ffffff;
+  --ink-dim:   rgba(255, 255, 255, 0.55);
   --ink-faint: rgba(255, 255, 255, 0.22);
-  --ink-ghost: rgba(255, 255, 255, 0.08);
-  --hair: 0.5px;
-  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
-  --serif: 'IBM Plex Serif', Georgia, serif;
+  --hair:      0.5px;
+  --mono:      'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --serif:     'IBM Plex Serif', Georgia, serif;
 }
 
 * { box-sizing: border-box; }
@@ -36,6 +35,9 @@ html, body {
   height: 100vh;
   display: block;
 }
+
+/* hide the bounding-box helpers that are embedded in the SVG */
+#Zooms { display: none; }
 
 /* ---- Header (top-left, persistent) ---- */
 .header {
@@ -122,7 +124,7 @@ html, body {
   background: rgba(0,0,0,0.7);
   line-height: 1.9;
   text-align: left;
-  min-width: 220px;
+  min-width: 260px;
 }
 .legend.open .panel { display: block; }
 .legend .panel .k {
@@ -135,102 +137,7 @@ html, body {
   padding: 1px 0;
 }
 
-/* ---- SVG content layers ---- */
-svg text { fill: var(--ink); font-family: var(--mono); font-weight: 300; }
-svg .band-frame, svg .module-frame, svg .module-detail-bg, svg .corner-tick, svg .band-tick, svg .flow-line {
-  vector-effect: non-scaling-stroke;
-}
-
-.band-frame {
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 0.6;
-}
-.band-tick {
-  stroke: var(--ink-faint);
-  stroke-width: 0.4;
-}
-.band-id {
-  font-family: var(--serif);
-  font-size: 11px;
-  letter-spacing: 0.3em;
-  fill: var(--ink-dim);
-}
-.band-title {
-  font-family: var(--serif);
-  font-size: 16px;
-  letter-spacing: 0.32em;
-  fill: var(--ink);
-  text-transform: uppercase;
-}
-.band-subtitle {
-  font-size: 8.5px;
-  letter-spacing: 0.22em;
-  fill: var(--ink-dim);
-  text-transform: uppercase;
-}
-
-.module-frame {
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 0.4;
-}
-.module-title {
-  font-family: var(--serif);
-  font-size: 9.5px;
-  letter-spacing: 0.18em;
-  fill: var(--ink);
-  text-transform: uppercase;
-}
-.module-summary {
-  font-size: 6.8px;
-  letter-spacing: 0.08em;
-  fill: var(--ink-dim);
-}
-.module-id {
-  font-size: 5.5px;
-  letter-spacing: 0.2em;
-  fill: var(--ink-faint);
-}
-
-.module-detail-bg {
-  fill: var(--bg);
-  stroke: var(--ink);
-  stroke-width: 0.6;
-  pointer-events: none;
-}
-.module-detail-line {
-  fill: var(--ink);
-  pointer-events: none;
-  font-family: var(--mono);
-  letter-spacing: 0.03em;
-}
-.module-detail-bullet {
-  fill: var(--ink);
-  pointer-events: none;
-}
-
-.flow-line {
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 0.25;
-  opacity: 0.32;
-}
-
-.bg-grid line {
-  stroke: var(--ink-ghost);
-  stroke-width: 0.25;
-}
-
-/* node hover state */
-.module-group { cursor: pointer; }
-.module-group:hover .module-frame { stroke-width: 0.8; }
-.module-group:hover .module-title { fill: var(--ink); }
-
-/* corner tick marks */
-.corner-tick { stroke: var(--ink); stroke-width: 0.5; fill: none; }
-
-/* loading state */
+/* ---- loading state ---- */
 .loading {
   position: fixed; inset: 0;
   display: flex; align-items: center; justify-content: center;
@@ -242,7 +149,7 @@ svg .band-frame, svg .module-frame, svg .module-detail-bg, svg .corner-tick, svg
 }
 .loading.hidden { display: none; }
 
-/* recording mode hides all chrome */
+/* ---- recording mode hides all chrome ---- */
 body.recording .header,
 body.recording .hud,
 body.recording .zoom-meter,
