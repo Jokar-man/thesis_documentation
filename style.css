@@ -82,6 +82,19 @@ html, body {
   padding: 1px 0;
 }
 
+/* ---- Focus blur overlay (4 panels surrounding the active zoom box) ---- */
+.fp {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.62);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+body.recording .fp { display: none; }
+
 /* ---- loading state ---- */
 .loading {
   position: fixed; inset: 0;
