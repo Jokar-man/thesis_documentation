@@ -149,11 +149,17 @@ function updateFocusPanels(t) {
   const vw = atlasEl.clientWidth;
   const vh = atlasEl.clientHeight;
 
+  // For slide bookmarks, use the full slide extent as the focus region
+  // so all results stay clear as the camera pans (not just the first box).
+  const focusBottom = (activeBm.slide && activeBm.slideBottom != null)
+    ? activeBm.slideBottom
+    : activeBm.y + activeBm.h;
+
   // Zoom box extents in screen space
   const sx = activeBm.x * t.k + t.x;
   const sy = activeBm.y * t.k + t.y;
   const sw = activeBm.w * t.k;
-  const sh = activeBm.h * t.k;
+  const sh = (focusBottom - activeBm.y) * t.k;
 
   // Clamp to viewport
   const top   = Math.max(0, Math.min(sy, vh));
